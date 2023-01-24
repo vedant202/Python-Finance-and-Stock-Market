@@ -15,14 +15,14 @@ bs = BeautifulSoup(html.content,"html.parser")
 #     print(type(link.string), " ", link.string)
 m = 1
 
-data = []
+data = [] # To store stock json data
 
-for link in bs.find_all('a'):
+for link in bs.find_all('a'): #finds all a anchor tag containing links
 
     if(str(type(link.string))== "<class 'bs4.element.NavigableString'>" and len(link.string.strip())>35):
-        date = link.parent.next_sibling.next_sibling.string
-        p = date.next_element.next_element.string
-        title = link.string
+        title = link.string # Extracting title from link
+        date = link.parent.next_sibling.next_sibling.string # Extracting date from link
+        p = date.next_element.next_element.string # Extracting sub para from link
         
         print(str(m)+" Title" + ". " + link.string)
         print("Date "+date)
@@ -30,10 +30,10 @@ for link in bs.find_all('a'):
         print()
         # print(link['href'])
         
-        html2 = rs.get(link['href'])
+        html2 = rs.get(link['href']) # Extracting whole news paragraph with request using the url inside of link
         bs1 = BeautifulSoup(html2.content,"html.parser")
         div = bs1.find_all("div", {"class": "story-with-main-sec"})
-        div_children = div[0]
+        div_children = div[0]  #Extracting first element inside div object 
         div_children_p = div_children.find_all('p')
         # print(div_children_p)
         para = ""
@@ -42,10 +42,12 @@ for link in bs.find_all('a'):
         print(para)
         
         d = {"title":str(title),
-                "date":str(date),
-                "sub para":str(p),
-                "link":str(link['href']),
-                "para":para}
+            "date":str(date),
+            "sub para":str(p),
+            "link":str(link['href']),
+            "para":para
+            }
+        print(d)
         data.append(d)
         m += 1
         
