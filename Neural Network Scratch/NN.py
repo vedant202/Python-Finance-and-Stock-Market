@@ -22,6 +22,25 @@ class Activation_Softmax:
         probabilities = exp_values/np.sum(exp_values,axis=1,keepdims=True)
         self.output = probabilities
 
+class Loss:
+    def claculate(self,output, y):
+        samples = self.forward(output,y)
+        data_loss = np.mean(samples)
+        return data_loss
+    
+class Loss_CategoricalCrossEntropy(Loss):
+
+    def forward(self, y_pred, y_true):
+        samples = len(y_pred)
+        y_pred_clipped = np.clip(samples,1e-7,1-1e-7)
+
+        if len(y_true.shape) == 1:
+            correct_confidence = y_pred_clipped[range(samples),y_true]
+        if len(y_true.shape)==2:
+            correct_confidence = np.sum(y_pred_clipped * y_true,axis=1)
+        negative_log_likelihoods = np.log(correct_confidence)
+        return negative_log_likelihoods
+
 
 X, y = spiral_data(samples=100,classes=3)
 
